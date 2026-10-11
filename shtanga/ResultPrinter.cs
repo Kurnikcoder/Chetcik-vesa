@@ -8,7 +8,6 @@ namespace shtanga
     {
         public void Print(string message, List<double> plates)
         {
-            Console.WriteLine(message);
             if (plates.Count > 0)
             {
                 // 1. УСПЕХ: подсвечиваем зеленым
