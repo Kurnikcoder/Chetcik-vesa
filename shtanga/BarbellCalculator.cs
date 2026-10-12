@@ -58,32 +58,42 @@ namespace shtanga
                 }
             }
 
-            // 6. Жадный подбор блинов
+            // 6. Подбор блинов методом поиска с возвратом (Backtracking)
             List<double> plateresult = new();
-            double current = 0;
 
-            foreach (double platte in plateList)
-            {
-                if (current + platte <= weigthalf)
-                {
-                    current += platte;
-                    plateresult.Add(platte);
-                }
-
-                if (current == weigthalf)
-                {
-                    break;
-                }
-            }
-
-            // 7. Проверяем итог: сошёлся ли вес ровно
-            if (current == weigthalf)
+            if (FindPlases(plateList, 0, weigthalf, plateresult))
             {
                 return ($"Вес заявлен успешно {weight1} кг", plateresult);
-                
+            }
+            else
+            {
+                return ("К сожалению, имеющимися блинами не получается собрать точный вес", new List<double>());
             }
 
-            return ("К сожалению, имеющимися блинами не получается собрать точный вес", new List<double>());
+        }
+        private bool FindPlases(List<double> plateList, int startindex, double remaining, List<double> result)
+        {
+            if (Math.Abs(remaining) < 0.001)
+            {
+                return true;
+            }
+            for (int i = startindex; i < plateList.Count; i++)
+            {
+                double plate = plateList[i];
+                if (plate > remaining)
+                {
+                    continue;
+                }
+                result.Add(plate);
+
+                if(FindPlases(plateList, i+1, remaining-plate, result))
+                {
+                    return true;
+                }
+                result.RemoveAt(result.Count - 1);
+                
+            }
+            return false;
         }
     }
 }
